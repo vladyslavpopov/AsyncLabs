@@ -1,4 +1,7 @@
 function map(arr, callback, done) {
+  const completeTime = 100;
+  const delay = 3000;
+  const startTime = Date.now();
   const result = [];
   let i = 0;
 
@@ -14,6 +17,15 @@ function map(arr, callback, done) {
   
   function processNext() {
     if (i >= arr.length) {
+      const endTime = Date.now();
+      const totalTime = endTime - startTime;
+
+      if (totalTime < completeTime) {
+        return setTimeout(() => {
+          done(result);
+        }, delay);
+      }
+
       return done(result);
     }
 
@@ -45,5 +57,4 @@ function map(arr, callback, done) {
   }
   
   demoMap();
-  
   
