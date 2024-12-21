@@ -1,46 +1,45 @@
-function asyncMap(array, callback, onComplete) {
-  const minExecutionTime = 100;
-  const delay = 3000;
-  const startTime = Date.now();
-  const result = [];
-  let index = 0;
-
-  function errorHandler(message) {
-    const error = new Error(message);
-    console.error('Error during mapping:', error);
-    return;
-  }
-    
-  if (!Array.isArray(array)) {
-    return errorHandler('Data type must be an array');
-  }
+const asyncMap = (array, callback, onComplete) => {
+    const minExecutionTime = 100;
+    const delay = 3000;
+    const startTime = Date.now();
+    const result = [];
+    let index = 0;
   
-  function handleNextElement() {
-    if (index >= array.length) {
-      const endTime = Date.now();
-      const totalTime = endTime - startTime;
-
-      if (totalTime < minExecutionTime) {
-        return setTimeout(() => {
-          onComplete(result);
-        }, delay);
-      }
-
-      return onComplete(result);
+    const errorHandler = (message) => {
+      const error = new Error(message);
+      console.error('Error during mapping:', error);
+    };
+      
+    if (!Array.isArray(array)) {
+      return errorHandler('Data type must be an array');
     }
-
-    const element = array[index];
-    callback(element, (changedElement) => {
-      result.push(changedElement);
-      index++;
-      handleNextElement();
-    });
-  }
+    
+    const handleNextElement = () => {
+      if (index >= array.length) {
+        const endTime = Date.now();
+        const totalTime = endTime - startTime;
   
-  handleNextElement();
-  }
+        if (totalTime < minExecutionTime) {
+          return setTimeout(() => {
+            onComplete(result);
+          }, delay);
+        }
   
-  function asyncMapExample() {
+        return onComplete(result);
+      }
+  
+      const element = array[index];
+      callback(element, (changedElement) => {
+        result.push(changedElement);
+        index++;
+        handleNextElement();
+      });
+    };
+    
+    handleNextElement();
+  };
+  
+  const asyncMapExample = () => {
     const data = [1, 2, 3, 4, 5];
     asyncMap(
       data,
@@ -54,6 +53,7 @@ function asyncMap(array, callback, onComplete) {
         console.log("asyncMap - result:", result);
       }
     );
-  }
+  };
   
   asyncMapExample();
+  
