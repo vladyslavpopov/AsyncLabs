@@ -1,20 +1,31 @@
 function map(arr, callback, done) {
-    const result = [];
-    let i = 0;
+  const result = [];
+  let i = 0;
+
+  function errorHandler(message) {
+    const error = new Error(message);
+    console.error('Error during mapping:', error);
+    return;
+  }
+    
+  if (!Array.isArray(arr)) {
+    return errorHandler('Data type must be an array');
+  }
   
-    function processNext() {
-      if (i >= arr.length) {
-        return done(result);
-      }
-      const item = arr[i];
-      callback(item, (transformedItem) => {
-        result.push(transformedItem);
-        i++;
-        processNext();
-      });
+  function processNext() {
+    if (i >= arr.length) {
+      return done(result);
     }
+
+    const item = arr[i];
+    callback(item, (transformedItem) => {
+      result.push(transformedItem);
+      i++;
+      processNext();
+    });
+  }
   
-    processNext();
+  processNext();
   }
   
   function demoMap() {
