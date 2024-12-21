@@ -1,9 +1,9 @@
-function map(arr, callback, done) {
-  const completeTime = 100;
+function asyncMap(array, callback, onComplete) {
+  const minExecutionTime = 100;
   const delay = 3000;
   const startTime = Date.now();
   const result = [];
-  let i = 0;
+  let index = 0;
 
   function errorHandler(message) {
     const error = new Error(message);
@@ -11,50 +11,49 @@ function map(arr, callback, done) {
     return;
   }
     
-  if (!Array.isArray(arr)) {
+  if (!Array.isArray(array)) {
     return errorHandler('Data type must be an array');
   }
   
-  function processNext() {
-    if (i >= arr.length) {
+  function handleNextElement() {
+    if (index >= array.length) {
       const endTime = Date.now();
       const totalTime = endTime - startTime;
 
-      if (totalTime < completeTime) {
+      if (totalTime < minExecutionTime) {
         return setTimeout(() => {
-          done(result);
+          onComplete(result);
         }, delay);
       }
 
-      return done(result);
+      return onComplete(result);
     }
 
-    const item = arr[i];
-    callback(item, (transformedItem) => {
-      result.push(transformedItem);
-      i++;
-      processNext();
+    const element = array[index];
+    callback(element, (changedElement) => {
+      result.push(changedElement);
+      index++;
+      handleNextElement();
     });
   }
   
-  processNext();
+  handleNextElement();
   }
   
-  function demoMap() {
+  function asyncMapExample() {
     const data = [1, 2, 3, 4, 5];
-    map(
+    asyncMap(
       data,
-      (item, next) => {
+      (element, handleMappedElement) => {
         setTimeout(() => {
-          const transformed = item * 2;
-          next(transformed);
+          const change = element * 2;
+          handleMappedElement(change);
         }, 10);
       },
       (result) => {
-        console.log("map - result:", result);
+        console.log("asyncMap - result:", result);
       }
     );
   }
   
-  demoMap();
-  
+  asyncMapExample();
