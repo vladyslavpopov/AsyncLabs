@@ -1,6 +1,7 @@
 const asyncMapPromise = (array, changeElement, concurrency) => {
   const minExecutionTime = 100;
   const startTime = Date.now();
+  const logDurationTime = false;
 
   return new Promise((resolve, reject) => {
     if (!Array.isArray(array)) {
@@ -17,14 +18,17 @@ const asyncMapPromise = (array, changeElement, concurrency) => {
         activePromises++;
 
         const start = Date.now();
-        console.log(`Starting task for element ${array[currentIndex]}`);
-
+        if (logDurationTime) {
+          console.log(`Starting task for element ${array[currentIndex]}`);
+        }
+        
         Promise.resolve(changeElement(array[currentIndex]))
           .then((mappedElement) => {
-            const end = Date.now();
-            console.log(
-              `Finished task for element ${array[currentIndex]}, took ${end - start}ms`);
-
+            const durationTime = Date.now() - start;
+            if (logDurationTime) {
+              console.log(`Finished task for element ${array[currentIndex]}, took ${durationTime}ms`);
+            }
+            
             result[currentIndex] = mappedElement;
             activePromises--;
             handleNextElement();
@@ -56,7 +60,7 @@ const asyncMapPromise = (array, changeElement, concurrency) => {
 asyncMapPromise(
   [1, 2, 3, 4, 5, 6],
   (element) =>
-    new Promise((resolve) => setTimeout(() => resolve(element * 2), 10000)), 2)
+    new Promise((resolve) => setTimeout(() => resolve(element * 2), 1000)), 2)
   .then((result) => console.log("Promise-based result:", result))
   .catch((error) => console.error(error));
 
@@ -66,7 +70,7 @@ async function example1() {
     const result = await asyncMapPromise(
       data,
       (element) =>
-        new Promise((resolve) => setTimeout(() => resolve(element * 2), 10000)), 2);
+        new Promise((resolve) => setTimeout(() => resolve(element * 2), 1000)), 2);
     console.log("Async-await result:", result);
   } catch (error) {
     console.error("Error:", error);
