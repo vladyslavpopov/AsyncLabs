@@ -30,13 +30,15 @@ const asyncMapPromise = (array, changeElement, concurrency, signal) => {
           console.log(`Starting task for element ${array[currentIndex]}`);
         }
 
-        Promise.resolve(changeElement(array[currentIndex]))
+        Promise.resolve(changeElement(array[currentIndex], signal))
           .then((mappedElement) => {
+            if (signal && signal.aborted) {
+              return reject(new Error("Operation was aborted"));
+            }
+
             const durationTime = Date.now() - start;
             if (logDurationTime) {
-              console.log(
-                `Finished task for element ${array[currentIndex]}, took ${durationTime}ms`
-              );
+              console.log(`Finished task for element ${array[currentIndex]}, took ${durationTime}ms`);
             }
 
             result[currentIndex] = mappedElement;
@@ -44,8 +46,12 @@ const asyncMapPromise = (array, changeElement, concurrency, signal) => {
             handleNextElement();
           })
           .catch((error) => {
-            console.error("Error during mapping:", error);
-            reject(error);
+            if (signal && signal.aborted) {
+              reject(new Error("Operation was aborted"));
+            } else {
+              console.error("Error during mapping:", error);
+              reject(error);
+            }
           });
       }
 
@@ -101,3 +107,24 @@ async function example1() {
 }
 
 example1();
+
+asyncMapPromise(
+  [1, 2, 3, 4, 5, 6],
+  (element, signal) =>
+    new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        if (signal.aborted) {
+          clearTimeout(timeout);
+          return reject(new Error("Task was aborted"));
+        }
+        resolve(element * 2);
+      }, 1000);
+    }), 2, signal
+)
+  .then((result) => console.log("result:", result))
+  .catch((error) => console.error("Error:", error.message));
+
+setTimeout(() => {
+  controller.abort();
+  console.log("Operation aborted by the user");
+}, 3000);
