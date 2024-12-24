@@ -2,7 +2,7 @@
 
 ## **Task 1 - Asynchronous Array Mapping**
 
-**File:** `task1.js`
+**File:** [`task1.js`](./Labs/task1.js)
 
 This task involves creating an asynchronous counterpart for the `Array.map` method, allowing callbacks to handle asynchronous operations on array elements.
 
@@ -31,7 +31,7 @@ asyncMap(
 
 ## **Task 2 - Promise-Based Array Mapping Alternative**
 
-**File:** `task2.js`
+**File:** [`task2.js`](./Labs/task2.js)
 
 This task offers a promise-based alternative to the asynchronous mapping function with concurrency control.
 
@@ -80,7 +80,7 @@ example1();
 
 ## **Task 3 - Abortable Async Mapping**
 
-**File:** `task3.js`
+**File:** [`task3.js`](./Labs/task3.js)
 
 This task extends the promise-based solution with `AbortController` integration to enable cancelable operations.
 
@@ -119,7 +119,7 @@ setTimeout(() => controller.abort(), 5000);
 
 ## **Task 4 - Large Dataset Processing**
 
-**File:** `task4.js`
+**File:** [`task4.js`](./Labs/task4.js)
 
 This task demonstrates processing large datasets using `Streams` and `AsyncIterator`, avoiding memory constraints.
 
@@ -137,7 +137,7 @@ This task demonstrates processing large datasets using `Streams` and `AsyncItera
 
 Before running `task4.js`, you need to generate a large dataset. Use the `createLargeFile.js` script to create a test file for processing.
 
-**File:** `createLargeFile.js`
+**File:** [`createLargeFile.js`](./Labs/createLargeFile.js)
 
 This script generates a large text file for testing purposes.
 
@@ -159,7 +159,7 @@ analyzeFile("./large_data.txt")
 
 ## **Task 5 - Reactive Message Communication**
 
-**File:** `task5.js`
+**File:** [`task5.js`](./Labs/task5.js)
 
 This task demonstrates reactive communication using `EventEmitter` for message handling between entities.
 
