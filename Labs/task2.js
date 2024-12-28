@@ -22,7 +22,7 @@ const asyncMapPromise = (array, changeElement, concurrency) => {
           console.log(`Starting task for element ${array[currentIndex]}`);
         }
 
-        Promise.resolve(changeElement(array[currentIndex]))
+        changeElement(array[currentIndex])
           .then((mappedElement) => {
             const durationTime = Date.now() - start;
             if (logDurationTime) {
@@ -47,7 +47,7 @@ const asyncMapPromise = (array, changeElement, concurrency) => {
 
         if (totalTime < minExecutionTime) {
           return setTimeout(
-            () => resolve(result),
+            () => resolve(result), 
             minExecutionTime - totalTime
           );
         }
